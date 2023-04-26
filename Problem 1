@@ -1,0 +1,33 @@
+
+import java.util.Scanner;
+
+public class P1 {
+    public static void main (String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int t = sc.nextInt();
+        int[] d = new int[n];
+        int[] b = new int[n];
+        long bales = 0;
+
+        for (int i = 0; i < n; i++) {
+            d[i] = sc.nextInt();
+            b[i] = sc.nextInt();
+        }
+        for (int i = 0; i < d.length; i++) {
+            if (i == d.length - 1) {
+                int distToEnd = t - d[i] + 1;
+                bales += Math.min(b[i], distToEnd);
+            } else {
+                bales += b[i];
+                int excessBales = b[i] - (d[i + 1] - d[i]);
+                if (excessBales > 0) {
+                    bales -= excessBales;
+                }
+            }
+        }
+        System.out.println(bales);
+    }
+}
+
+
