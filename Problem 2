@@ -1,0 +1,111 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class P2 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+        for (int t = 0; t < T; t++) {
+            // running test cases
+            int N = sc.nextInt();
+            String[][] canvas = new String[N][N];
+            for (int i = 0; i < N; i++) {
+                // reading in canvas
+                String rowString = sc.next();
+                String[] rowChars = rowString.split("");
+               for (int j = 0; j < N; j++) {
+                   canvas[i][j] = rowChars[j];
+               }
+            }
+            // reading in stamp
+            int K = sc.nextInt();
+            String[][] stamp = new String[N][N];
+            for (int ii = 0; ii < K; ii++) {
+                String rowString = sc.next();
+                String[] rowChars = rowString.split("");
+                for (int jj = 0; jj < K; jj++) {
+                    stamp[ii][jj] = rowChars[jj];
+                }
+            }
+            boolean foundOuter = false;
+            for (int i = 0; i < N - K + 1; i++) {
+                for (int j = 0; j < N - K + 1; j++) {
+                    boolean foundInner = true;
+                    foundInner = matchFound(canvas, stamp, i, j, K);
+                    if (foundInner) {
+                        foundOuter = true;
+                    }
+                    // 90 deg
+                    String[][] newStamp = rotate(stamp, K);
+                    foundInner = matchFound(canvas, newStamp, i, j, K);
+                    if (foundInner) {
+                        foundOuter = true;
+                    }
+                    // 180 deg
+                    newStamp = rotate(newStamp, K);
+                    foundInner = matchFound(canvas, newStamp, i, j, K);
+                    if (foundInner) {
+                        foundOuter = true;
+                    }
+                    // 270 deg
+                    newStamp = rotate(newStamp, K);
+                    foundInner = matchFound(canvas, newStamp, i, j, K);
+                    if (foundInner) {
+                        foundOuter = true;
+                    }
+                }
+            }
+            if (foundOuter) {
+                System.out.println("YES");
+            } else {
+                System.out.println("NO");
+            }
+        }
+
+
+
+    }
+    public static String[][] rotate(String[][] A, int N) {
+        String[][] R = new String[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                R[i][j] = A[i][j];
+
+            }
+        }
+        // transpose
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i != j) {
+                    String temp = R[i][j];
+                    R[i][j] = R[j][i];
+                    R[j][i] = temp;
+                }
+            }
+        }
+        // swapping i and j
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N/2; j++) {
+                if (i != j) {
+                    String temp = R[i][j];
+                    R[i][j] = R[i][N - j - 1];
+                    R[i][N - j - 1] = temp;
+                }
+            }
+        }
+        return R;
+    }
+    public static boolean matchFound(String[][] canvas, String[][] stamp, int i, int j, int K) {
+        boolean foundInner = true;
+        for (int ii = 0; ii < K; ii++) {
+            for (int jj = 0; jj < K; jj++) {
+                if (canvas[i + ii][j + jj].equals(".")) {
+                    if (!(canvas[i + ii][j + jj].equals(stamp[ii][jj]))) {
+                        foundInner = false;
+                    }
+                }
+            }
+        }
+        return foundInner;
+    }
+}
